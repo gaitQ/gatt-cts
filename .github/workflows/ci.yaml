@@ -1,0 +1,26 @@
+name: CI
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: fedora:35
+    steps:
+      - name: Install libfaketime
+        run: dnf install -y faketime pipenv
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Full history to ensure we have tags
+
+      - name: Install Python Deps
+        run: pipenv install --dev
+
+      - name: Run tests
+        run: pipenv run pytest --junitxml=test_output.xml
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: test_output.xml
