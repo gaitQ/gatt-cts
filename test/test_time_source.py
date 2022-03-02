@@ -11,14 +11,13 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 import json
 import subprocess
+import sys
 
-from hypothesis.extra.pytz import timezones
-from hypothesis import given, strategies as st
 import pytest
 import pytz
 
-
-PYTHON_CMD = ["python", "time_source.py"]
+PYTHON = sys.executable
+PYTHON_CMD = [PYTHON, "time_source.py"]
 
 def _run_with_faketime(command, datetime_str, tz=pytz.utc.zone):
     full_command = ["faketime", datetime_str] + command
